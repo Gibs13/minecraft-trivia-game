@@ -5,9 +5,10 @@ var alexa = require( 'alexa-app' );
 var app = new alexa.app( 'minecraft-trivia-game' );
 
 var questions = require("./questions");
-var state = "";
 
 app.launch( function( request, response ) {
+	delete app.intent('Next');
+	delete app.intent('Answer');
 	response.say('Welcome, say start to begin the game.').shouldEndSession( false );
 } );
 
