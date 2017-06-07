@@ -8,14 +8,18 @@ var questions = require("./questions");
 var state = "";
 
 app.launch( function( request, response ) {
-	response.say('Welcome').shouldEndSession( false );
+	response.say('Welcome, say start to begin the game.').shouldEndSession( false );
 } );
 
 app.intent('Start',
   function(request,response) {
+  	var Answered = 0;
+  	var score = 0;
   	var selectedQuestions = randomizeQuestions(questions);
+  	var questionNumber = 0;
   	var selectedAnswers = randomizeAnswers(selectedQuestions,questions,0);
-    response.say('Question number one. ' + Object.keys(questions[selectedQuestions[0]]) + '. Answers. One. ' + selectedAnswers[0] + ' Two. ' + selectedAnswers[1] + ' Three. ' + selectedAnswers[2] + ' Four. ' + selectedAnswers[3]).shouldEndSession( false );
+  	var repromptText = 'Answers. One. ' + selectedAnswers[0] + ' Two. ' + selectedAnswers[1] + ' Three. ' + selectedAnswers[2] + ' Four. ' + selectedAnswers[3];
+    response.say('Question number one. ' + Object.keys(questions[selectedQuestions[0]]) + '. ' + repromptText).reprompt(repromptText).shouldEndSession( false );
     app.intent('Answer',
 	{
     	"slots":{"number":"NUMBER"}
@@ -25,11 +29,34 @@ app.intent('Start',
 	},
 	function(request,response) {
 	    var number = request.slot('number');
-	    response.say("Your answer is "+selectedAnswers[number-1]).shouldEndSession( true );
+	    var correct = (selectedAnswers[number-1] == questions[selectedQuestions[questionNumber]][Object.keys(questions[selectedQuestions[questionNumber]])][0]) ? "correct" : "incorrect";
+	    if (correct == "correct" && Answered == 0) {
+	    	score++;
+	    }
+	    Answered = 1;
+	    response.say(""+correct).shouldEndSession( false );
+	});
+	app.intent('Next',
+	function(request,response) {
+		if (questionNumber<1) {
+			Answered = 0;
+	    	questionNumber++;
+			selectedAnswers = randomizeAnswers(selectedQuestions,questions,questionNumber);
+			repromptText = 'Answers. One. ' + selectedAnswers[0] + ' Two. ' + selectedAnswers[1] + ' Three. ' + selectedAnswers[2] + ' Four. ' + selectedAnswers[3];
+	    	response.say('Question number ' + (questionNumber+1) + '. ' + Object.keys(questions[selectedQuestions[questionNumber]]) + '. ' + repromptText).reprompt(repromptText).shouldEndSession( false );
+		}
+		else {
+			response.say('It was the last question. Your score is ' + score + ' points.');
+		}
 	});
   }
 );
 
+app.intent('Stop',
+  function(request,response) {
+  	response.say('Goodbye.');
+  }
+);
 
 
 function randomizeQuestions(questionsList){
