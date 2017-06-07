@@ -19,8 +19,8 @@ app.intent('Start',
   	var selectedQuestions = randomizeQuestions(questions);
   	var questionNumber = 0;
   	var selectedAnswers = randomizeAnswers(selectedQuestions,questions,0);
-  	var repromptText = 'Answers. One. ' + selectedAnswers[0] + ' Two. ' + selectedAnswers[1] + ' Three. ' + selectedAnswers[2] + ' Four. ' + selectedAnswers[3];
-    response.say('Question number one. ' + Object.keys(questions[selectedQuestions[0]]) + '. ' + repromptText).reprompt(repromptText).shouldEndSession( false );
+  	var AnswerText = 'Answers. One. ' + selectedAnswers[0] + ' Two. ' + selectedAnswers[1] + ' Three. ' + selectedAnswers[2] + ' Four. ' + selectedAnswers[3];
+    response.say('Question number one. ' + Object.keys(questions[selectedQuestions[0]]) + '. ' + AnswerText).shouldEndSession( false );
     app.intent('Answer',
 	{
     	"slots":{"number":"NUMBER"}
@@ -43,8 +43,8 @@ app.intent('Start',
 			Answered = 0;
 	    	questionNumber++;
 			selectedAnswers = randomizeAnswers(selectedQuestions,questions,questionNumber);
-			repromptText = 'Answers. One. ' + selectedAnswers[0] + ' Two. ' + selectedAnswers[1] + ' Three. ' + selectedAnswers[2] + ' Four. ' + selectedAnswers[3];
-	    	response.say('Question number ' + (questionNumber+1) + '. ' + Object.keys(questions[selectedQuestions[questionNumber]]) + '. ' + repromptText).reprompt(repromptText).shouldEndSession( false );
+			AnswerText = 'Answers. One. ' + selectedAnswers[0] + ' Two. ' + selectedAnswers[1] + ' Three. ' + selectedAnswers[2] + ' Four. ' + selectedAnswers[3];
+	    	response.say('Question number ' + (questionNumber+1) + '. ' + Object.keys(questions[selectedQuestions[questionNumber]]) + '. ' + AnswerText).shouldEndSession( false );
 		}
 		else {
 			response.say('It was the last question. Your score is ' + score + ' points.');
