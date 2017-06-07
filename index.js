@@ -4,8 +4,6 @@ module.change_code = 1;
 var alexa = require( 'alexa-app' );
 var app = new alexa.app( 'minecraft-trivia-game' );
 
-app.dictionary = {"numbers":["one","two","three","four"]};
-
 var questions = require("./questions");
 var state = "";
 
@@ -17,17 +15,17 @@ app.intent('Start',
   function(request,response) {
   	var selectedQuestions = randomizeQuestions(questions);
   	var selectedAnswers = randomizeAnswers(selectedQuestions,questions,0);
-    response.say('Question number one. ' + Object.keys(questions[selectedQuestions[0]]) + 'Answers. One. ' + selectedAnswers[0]).shouldEndSession( false );
+    response.say('Question number one. ' + Object.keys(questions[selectedQuestions[0]]) + '. Answers. One. ' + selectedAnswers[0] + ' Two. ' + selectedAnswers[1] + ' Three. ' + selectedAnswers[2] + ' Four.' + selectedAnswers[3]).shouldEndSession( false );
     app.intent('Answer',
 	{
     	"slots":{"number":"NUMBER"}
 		,"utterances":[ 
-			"My answer is the number {numbers|number}",
-			"I think it's the answer number {numbers|number}"]
+			"My answer is the number {1-4|number}",
+			"I think it's the answer number {1-4|number}"]
 	},
 	function(request,response) {
 	    var number = request.slot('number');
-	    response.say("You asked for the number "+selectedAnswers[0]).shouldEndSession( true );
+	    response.say("Your answer is "+selectedAnswers[number]).shouldEndSession( true );
 	});
   }
 );
