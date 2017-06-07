@@ -17,11 +17,8 @@ app.intent('Start',
   function(request,response) {
   	var selectedQuestions = randomizeQuestions(questions);
   	var selectedAnswers = randomizeAnswers(selectedQuestions,questions,0);
-    response.say('Question number one.' + Object.keys(questions[selectedQuestions[0]]) + 'Answers. One. ' + selectedAnswers[0]).shouldEndSession( false );
-  }
-);
-
-app.intent('Answer',
+    response.say('Question number one. ' + Object.keys(questions[selectedQuestions[0]]) + 'Answers. One. ' + selectedAnswers[0]).shouldEndSession( false );
+    app.intent('Answer',
 	{
     	"slots":{"number":"NUMBER"}
 		,"utterances":[ 
@@ -30,8 +27,11 @@ app.intent('Answer',
 	},
 	function(request,response) {
 	    var number = request.slot('number');
-	    response.say("You asked for the number "+selectedAnswers[0]).shouldEndSession( false );
+	    response.say("You asked for the number "+selectedAnswers[0]).shouldEndSession( true );
 	});
+  }
+);
+
 
 
 function randomizeQuestions(questionsList){
