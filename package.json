@@ -1,0 +1,23 @@
+{
+  "name": "minecraft-trivia-game",
+  "version": "1.0.0",
+  "description": "\"# minecraft-trivia-game\"",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/Gibs13/minecraft-trivia-game.git"
+  },
+  "author": "Gabriel Wantz",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/Gibs13/minecraft-trivia-game/issues"
+  },
+  "homepage": "https://github.com/Gibs13/minecraft-trivia-game#readme",
+  "dependencies": {
+    "alexa-app": "^4.0.1"
+  },
+  "devDependencies": {}
+}
