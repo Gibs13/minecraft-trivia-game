@@ -1,0 +1,15 @@
+Start Start
+Stop I want to stop
+Next Next
+Answer {one|number}
+Answer {two|number}
+Answer {three|number}
+Answer {four|number}
+Answer My answer is the number {one|number}
+Answer My answer is the number {two|number}
+Answer My answer is the number {three|number}
+Answer My answer is the number {four|number}
+Answer I think it's the answer number {one|number}
+Answer I think it's the answer number {two|number}
+Answer I think it's the answer number {three|number}
+Answer I think it's the answer number {four|number}
