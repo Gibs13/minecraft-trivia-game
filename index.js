@@ -28,7 +28,10 @@ app.intent('Start',
 
     console.log(response.session('selectedQuestions')[0]);
     response.say('Question number one. ' + Object.keys(questions[response.session('selectedQuestions')[0]]) + '. ' + response.session('AnswerText')).shouldEndSession( false );
-    app.intent('Answer',
+  }
+);
+
+app.intent('Answer',
 	{
     	"slots":{"number":"NUMBER"}
 		,"utterances":[ 
@@ -48,8 +51,9 @@ app.intent('Start',
 	    response.session('Answered',1);
 	    response.say(""+correct).shouldEndSession( false );
 		}
-	});
-	app.intent('Next',
+});
+
+app.intent('Next',
 	function(request,response) {
 		if (response.session('questionNumber') < 1) {
 			response.session('Answered',0);
@@ -68,9 +72,7 @@ app.intent('Start',
 		} else {
 			response.say('There was an error, please say start to begin the game.').shouldEndSession( false );
 		}
-	});
-  }
-);
+});
 
 app.intent('Stop',
   function(request,response) {

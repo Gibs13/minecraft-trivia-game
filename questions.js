@@ -34,7 +34,7 @@ module.exports = [
 		"Iron, an endereye and a dragon egg.",
 		"Tnt, netherrack and lava.",
 		"Wool, glowing stone and a black carpet.",
-		"Diamond blocks, black clay and a bottle"
+		"Diamond blocks, black clay and a bottle."
 		]
 	}
 ]
