@@ -6,48 +6,67 @@ var app = new alexa.app( 'minecraft-trivia-game' );
 
 var questions = require("./questions");
 
+app.pre = function(request, response, type) {
+};
+
 app.launch( function( request, response ) {
-	delete app.intent('Next');
-	delete app.intent('Answer');
 	response.say('Welcome, say start to begin the game.').shouldEndSession( false );
 } );
 
 app.intent('Start',
   function(request,response) {
-  	var Answered = 0;
-  	var score = 0;
+  	
   	var selectedQuestions = randomizeQuestions(questions);
-  	var questionNumber = 0;
   	var selectedAnswers = randomizeAnswers(selectedQuestions,questions,0);
-  	var AnswerText = 'Answers. One. ' + selectedAnswers[0] + ' Two. ' + selectedAnswers[1] + ' Three. ' + selectedAnswers[2] + ' Four. ' + selectedAnswers[3];
-    response.say('Question number one. ' + Object.keys(questions[selectedQuestions[0]]) + '. ' + AnswerText).shouldEndSession( false );
+  	
+    response.session('selectedQuestions',selectedQuestions);
+    response.session('selectedAnswers',selectedAnswers);
+    response.session('score',0);
+    response.session('questionNumber',0);
+    response.session('Answered',0)
+    response.session('AnswerText','Answers. One. ' + response.session('selectedAnswers')[0] + ' Two. ' + response.session('selectedAnswers')[1] + ' Three. ' + response.session('selectedAnswers')[2] + ' Four. ' + response.session('selectedAnswers')[3]);
+
+    console.log(response.session('selectedQuestions')[0]);
+    response.say('Question number one. ' + Object.keys(questions[response.session('selectedQuestions')[0]]) + '. ' + response.session('AnswerText')).shouldEndSession( false );
     app.intent('Answer',
 	{
     	"slots":{"number":"NUMBER"}
 		,"utterances":[ 
 			"My answer is the number {1-4|number}",
-			"I think it's the answer number {1-4|number}"]
-	},
+			"I think it's the answer number {1-4|number}"]},	
 	function(request,response) {
+		if (response.session('Answered') == undefined) {
+			response.say('There was an error, please say start to begin the game.').shouldEndSession( false );
+		} else {
 	    var number = request.slot('number');
-	    var correct = (selectedAnswers[number-1] == questions[selectedQuestions[questionNumber]][Object.keys(questions[selectedQuestions[questionNumber]])][0]) ? "correct" : "incorrect";
-	    if (correct == "correct" && Answered == 0) {
+	    var correct = (response.session('selectedAnswers')[number-1] == questions[response.session('selectedQuestions')[response.session('questionNumber')]][Object.keys(questions[response.session('selectedQuestions')[response.session('questionNumber')]])][0]) ? "correct" : "incorrect";
+	    if (correct == "correct" && response.session('Answered') == 0) {
+	    	score = response.session('score');
 	    	score++;
+	    	response.session('score',score);
 	    }
-	    Answered = 1;
+	    response.session('Answered',1);
 	    response.say(""+correct).shouldEndSession( false );
+		}
 	});
 	app.intent('Next',
 	function(request,response) {
-		if (questionNumber<1) {
-			Answered = 0;
+		if (response.session('questionNumber') < 1) {
+			response.session('Answered',0);
+			questionNumber = response.session('questionNumber');
 	    	questionNumber++;
-			selectedAnswers = randomizeAnswers(selectedQuestions,questions,questionNumber);
-			AnswerText = 'Answers. One. ' + selectedAnswers[0] + ' Two. ' + selectedAnswers[1] + ' Three. ' + selectedAnswers[2] + ' Four. ' + selectedAnswers[3];
-	    	response.say('Question number ' + (questionNumber+1) + '. ' + Object.keys(questions[selectedQuestions[questionNumber]]) + '. ' + AnswerText).shouldEndSession( false );
+	    	response.session('questionNumber',questionNumber);
+
+			selectedAnswers = randomizeAnswers(response.session('selectedQuestions'),questions,response.session('questionNumber'));
+			response.session('selectedAnswers',selectedAnswers);
+
+			response.session('AnswerText','Answers. One. ' + response.session('selectedAnswers')[0] + ' Two. ' + response.session('selectedAnswers')[1] + ' Three. ' + response.session('selectedAnswers')[2] + ' Four. ' + response.session('selectedAnswers')[3]);
+	    	response.say('Question number ' + (response.session('questionNumber')+1) + '. ' + Object.keys(questions[response.session('selectedQuestions')[response.session('questionNumber')]]) + '. ' + response.session('AnswerText')).shouldEndSession( false );
 		}
-		else {
-			response.say('It was the last question. Your score is ' + score + ' points.');
+		else if (response.session('questionNumber') == 1){
+			response.say('It was the last question. Your score is ' + response.session('score') + ' points.');
+		} else {
+			response.say('There was an error, please say start to begin the game.').shouldEndSession( false );
 		}
 	});
   }
@@ -81,7 +100,6 @@ function randomizeAnswers(question,questionsList,questionNumber){
 	var selectedAnswers = [];
 	var AnswerList = questionsList[question[questionNumber]][Object.keys(questionsList[question[questionNumber]])]
 	var l = questionsList[question[questionNumber]][Object.keys(questionsList[question[questionNumber]])].length;
-	console.log();
 	var Answer = Math.floor(Math.random()*4);
 	for (var i=0;i<l;i++){
 		selectedAnswers.push(i)
