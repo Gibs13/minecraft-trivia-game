@@ -6,6 +6,10 @@ var app = new alexa.app( 'minecraft-trivia-game' );
 
 var questions = require("./questions");
 
+function bop() {
+	console.log(app.request.response.session('score'));
+}
+
 app.pre = function(request, response, type) {
 };
 
@@ -25,6 +29,8 @@ app.intent('Start',
     response.session('questionNumber',0);
     response.session('Answered',0)
     response.session('AnswerText','Answers. One. ' + response.session('selectedAnswers')[0] + ' Two. ' + response.session('selectedAnswers')[1] + ' Three. ' + response.session('selectedAnswers')[2] + ' Four. ' + response.session('selectedAnswers')[3]);
+
+	bop();
 
     console.log(response.session('selectedQuestions')[0]);
     response.say('Question number one. ' + Object.keys(questions[response.session('selectedQuestions')[0]]) + '. ' + response.session('AnswerText')).shouldEndSession( false );
